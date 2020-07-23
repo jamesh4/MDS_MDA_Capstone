@@ -1,0 +1,277 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>MDA + MDS</title>
+
+    <link rel="icon" href="{% static 'image/mda_m_icon_logo.png' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;900&family=Ubuntu&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="stars">
+      <div class="twinkling">
+        <!-- <div class="clouds"> -->
+
+
+
+          <!-- NAV BAR -->
+          <div class="container-fluid">
+            <nav class="navbar navbar-expand-md navbar-dark">
+              <a class="navbar-brand" href="https://mdacorporation.com/corporate/" target="_blank" style="position:fixed;">
+                <img src="{% static 'image/mda_logo.png' %}" width="" height="30" alt="">
+              </a>
+
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav ml-auto">
+                  <a class="nav-item nav-link" href="https://github.com/UBC-MDS/591_capstone_2020-mda-mds" target="_blank" ><i class="fab fa-github fa-2x"></i></a>
+                </div>
+            </nav>
+
+            <!-- MAIN CARD -->
+            <div class="canadarm_container">
+              <img src="{% static 'image/Canadarm.png' %}" alt="Canadaarm" class='canadarm'>
+            </div>
+
+            <div class="card">
+              <div class="container">
+                  <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_tab != 'demo_tab' %}active{% endif %}" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">User Image</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_tab == 'demo_tab' %} active {% endif %}" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Demo Example</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="database-tab" data-toggle="tab" href="#database" role="tab" aria-controls="profile" aria-selected="false">Database Upload</a>
+                    </li>
+                  </ul>
+                  <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade" id="database" role="tabpanel" aria-labelledby="database-tab">
+                      <div class="card-body">
+                        <h5 class="card-title">Upload Your JSON Caption File and Image</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Select your images (.jpg, .png, .tif) and caption (.json) here</h6>
+
+                        <form class="database_form" action="/database/" method="post" autocomplete="off" enctype="multipart/form-data">
+                          {% csrf_token %}
+
+                          <input type="file" name="multiple_images_upload" id="multiple_images_upload_input" multiple> <br><br>
+
+                          <input type="submit" class="btn btn-secondary" id="database_upload_input" value="Database Upload">
+                        </form>
+
+
+
+
+                      </div>
+
+                    </div>
+                    <div class="tab-pane fade {% if active_tab == 'demo_tab' %}show active {% endif %}" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                      <div class="card-body">
+                        <div class="containder">
+
+                          {% if not image_one_name %}
+                          <h5 class="card-title">See our model in action!</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">Press 'Generate' to see examples of our model's captioning capabilities!</h6>
+                          {% endif %}
+
+                          <div class="row">
+                            <div class="column">
+                              {% if image_one_name %}
+                              <div class="random_generated_image">
+                                <img src="{% static 'test/'|add:image_one_name %}" alt="Snow" style="width:100%">
+                              </div>
+                              <div class="post-content">
+                                <p><em>Generated Caption:</em> <br>
+                                  {{generated_caption_1}}</p>
+
+                                <p style="margin-bottom: 0px;"><em>Original Caption:</em></p>
+                                <ul>
+                                  <li><em>1: &nbsp; </em> {{og_caption_1_1}}</li>
+                                  <li><em>2: &nbsp; </em> {{og_caption_1_2}}</li>
+                                  <li><em>3: &nbsp; </em> {{og_caption_1_3}}</li>
+                                  <li><em>4: &nbsp; </em> {{og_caption_1_4}}</li>
+                                  <li><em>5: &nbsp; </em> {{og_caption_1_5}}</li>
+                                </ul>
+
+                                <table class="table">
+                                  <tr>
+                                    <td><em>Bleu_1: </em>{{bleu_1_1}}</td>
+                                    <td><em>Bleu_2: </em>{{bleu_2_1}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td><em>Bleu_3: </em>{{bleu_3_1}}</td>
+                                    <td><em>Bleu_4: </em>{{bleu_4_1}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td><em>ROUGE_L: </em>{{rouge_l_1}}</td>
+                                    <td><em>CIDEr: </em>{{cider_1}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td><em>SPICE: </em>{{spice_1}}</td>
+                                    <td><em>USC: </em>{{usc_1}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td><em>METEOR: </em>{{meteor_1}}</td>
+                                  </tr>
+                                </table>
+                             </div>
+                             {% endif %}
+                            </div>
+                            <div class="column">
+                              {% if image_one_name %}
+                              <div class="random_generated_image">
+                                <img src="{% static 'test/'|add:image_two_name %}" alt="Rain" style="width:100%">
+                              </div>
+                              <div class="post-content">
+                                <p><em>Generated Caption: </em> <br>
+                                  {{generated_caption_2}}</p>
+                                <p style="margin-bottom: 0px;"><em>Original Caption:</em></p>
+                                <ul>
+                                  <li><em>1: &nbsp; </em> {{og_caption_2_1}}</li>
+                                  <li><em>2: &nbsp; </em> {{og_caption_2_2}}</li>
+                                  <li><em>3: &nbsp; </em> {{og_caption_2_3}}</li>
+                                  <li><em>4: &nbsp; </em> {{og_caption_2_4}}</li>
+                                  <li><em>5: &nbsp; </em> {{og_caption_2_5}}</li>
+                                </ul>
+
+
+                                <table class="table">
+                                  <tr>
+                                    <td><em>Bleu_1: </em>{{bleu_1_2}}</td>
+                                    <td><em>Bleu_2: </em>{{bleu_2_2}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td><em>Bleu_3: </em>{{bleu_3_2}}</td>
+                                    <td><em>Bleu_4: </em>{{bleu_4_2}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td><em>ROUGE_L: </em>{{rouge_l_2}}</td>
+                                    <td><em>CIDEr: </em>{{cider_2}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td><em>SPICE: </em>{{spice_2}}</td>
+                                    <td><em>USC: </em>{{usc_2}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td><em>METEOR: </em>{{meteor_2}}</td>
+                                  </tr>
+                                </table>
+                             </div>
+                             {% endif %}
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <form class="generate_form" action="/generate/" method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="button" class="btn btn-secondary" style="margin-bottom:16px;">Generate</button>
+                      </form>
+                    </div>
+
+
+                </div>
+                <div class="tab-pane fade {% if active_tab != 'demo_tab' %}show active{% endif %}" id="home" role="tabpanel" aria-labelledby="home-tab">
+                  <div class="card-body">
+                    <h5 class="card-title">Upload Your Caption and Image</h5>
+
+                    <form action="/external/" method="post" class="form" enctype="multipart/form-data">
+                      {% csrf_token %}
+
+                      <div class="container">
+                        <div class="row">
+                            <div class="col-xs-6">
+                              <h6 class="card-subtitle mb-2 text-muted">Select your image here</h6>
+                              <input type="file" name="image_upload" id="image_upload">
+                            </div>
+                            <div class="col-xs-6">
+                              <h6 class="card-subtitle mb-2 text-muted">Select your model here</h6>
+                              <select class="" name="local_ml_models">
+                                {%for item in model_list%}
+                                    <option>{{item}}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+                        </div>
+                      </div>
+
+                      <!-- <br><br>
+                      <h6 class="card-subtitle mb-2 text-muted">Select your model here</h6>
+                      <select class="" name="local_ml_models">
+                        {%for item in model_list%}
+                            <option>{{item}}</option>
+                        {% endfor %}
+                      </select> -->
+                      <br>
+                      <input type="submit" class="btn btn-secondary" name="upload_image_input" value="Submit Image">
+                      <br>
+                      <div class="post-container">
+                        {% if raw_url or edit_url %}
+                          <div class="post-thumb">
+                            <img src="{{raw_url}}" alt="raw_image" class="upload_image" style="padding-bottom:20px; width:55%; height:auto; margin-right:10px; margin-top:10px;">
+                          </div>
+                        {% endif %}
+
+                        {% if data %}
+                          <div class="post-content">
+                            <p><em>Generated Caption:</em> <strong>{{model_caption}}</strong></p>
+                         </div>
+                        {% endif %}
+
+                      </div>
+
+                      {% if raw_url or edit_url %}
+                        <br>
+                        <div class="user_caption_input_text_area">
+                          <h6>If you're unstatsified with the model generated caption, please enter your own captions. Otherwise enter none and press <em>Submit</em> below.</h6>
+                          <textarea cols="70" rows="1" class="textarea" name="param" placeholder="Optional: Enter 1st image caption here... "></textarea>
+                          <br>
+                          <textarea cols="70" rows="1" class="textarea" name="param_2" placeholder="Optional: Enter 2nd image caption here... "></textarea>
+                          <br>
+                          <textarea cols="70" rows="1" class="textarea" name="param_3" placeholder="Optional: Enter 3rd image caption here... "></textarea>
+                          <br>
+                          <textarea cols="70" rows="1" class="textarea" name="param_4" placeholder="Optional: Enter 4th image caption here... "></textarea>
+                          <br>
+                          <textarea cols="70" rows="1" class="textarea" name="param_5" placeholder="Optional: Enter 5th image caption here... "></textarea>
+                          <br><br>
+
+                          <input type="submit" class="btn btn-secondary" name="upload_caption_input" value="Submit Caption">
+                        </div>
+
+                      {% endif %}
+
+                      <span class='label label-info' id="upload-file-info"></span>
+                    </form>
+
+
+
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            </div>
+
+
+          </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="https://kit.fontawesome.com/503f25f00c.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
